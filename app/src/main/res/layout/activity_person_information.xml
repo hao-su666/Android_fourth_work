@@ -9,69 +9,80 @@
         android:id="@+id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/name"/>
+        android:hint="@string/name"
+        android:inputType="textPersonName" />
+
     <EditText
         android:id="@+id/et_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/phone"/>
+        android:hint="@string/phone"
+        android:inputType="phone" />
 
     <RadioGroup
         android:id="@+id/rg_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/rb_male"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/male"/>
+            android:text="@string/male" />
+
         <RadioButton
             android:id="@+id/rb_female"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/female"/>
+            android:text="@string/female" />
     </RadioGroup>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="爱好"/>
+        android:text="@string/hobby" />
+
     <CheckBox
         android:id="@+id/cb_read"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="阅读"/>
+        android:text="@string/hobby_read" />
+
     <CheckBox
         android:id="@+id/cb_travel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="旅游"/>
+        android:text="@string/hobby_travel" />
+
     <CheckBox
         android:id="@+id/cb_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="游戏"/>
+        android:text="@string/hobby_game" />
+
     <CheckBox
         android:id="@+id/cb_shop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="购物"/>
+        android:text="@string/hobby_shop" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button
             android:id="@+id/btn_save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/save"/>
+            android:text="@string/save" />
+
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel"/>
+            android:text="@string/cancel" />
     </LinearLayout>
 </LinearLayout>

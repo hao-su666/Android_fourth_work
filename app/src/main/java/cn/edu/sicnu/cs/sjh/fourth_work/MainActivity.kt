@@ -2,8 +2,11 @@ package cn.edu.sicnu.cs.sjh.fourth_work
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -44,11 +47,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_about) {
+            showAboutDialog()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showAboutDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.about_title)
+            .setMessage(R.string.about_msg)
+            .setPositiveButton(R.string.ok, null)
+            .show()
+    }
+
     private fun refreshUI() {
-        tvName.text = "${getString(R.string.name)}:${player.name}"
-        tvGender.text = "${getString(R.string.gender)}:${player.gender}"
-        tvPhone.text = "${getString(R.string.phone)}:${player.phone}"
-        tvMaxScore.text = "${getString(R.string.max_score)}:${player.maxScore}"
+        tvName.text = getString(R.string.info_format, getString(R.string.name), player.name)
+        tvGender.text = getString(R.string.info_format, getString(R.string.gender), player.gender)
+        tvPhone.text = getString(R.string.info_format, getString(R.string.phone), player.phone)
+        tvMaxScore.text = getString(
+            R.string.info_format,
+            getString(R.string.max_score),
+            player.maxScore.toString()
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- 翻牌游戏卡牌配色 -->
+    <color name="card_back">#3949AB</color>
+    <color name="card_back_stroke">#283593</color>
+    <color name="card_front">#FFFFFF</color>
+    <color name="card_front_stroke">#3949AB</color>
+    <color name="card_matched">#A5D6A7</color>
+    <color name="card_matched_stroke">#2E7D32</color>
+    <color name="card_text_face">#1A237E</color>
+    <color name="card_text_matched">#1B5E20</color>
 </resources>

@@ -1,56 +1,70 @@
 package cn.edu.sicnu.cs.sjh.fourth_work
 
-import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.GridView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * 翻牌游戏的 RecyclerView 适配器。
+ *
+ * @param model 游戏模型，适配器只负责把模型状态渲染到界面上。
+ * @param onCardClick 卡牌点击回调，交给控制器 Fragment/Activity 处理。
+ */
 class CardAdapter(
-    private val context: Context,
-    private val model: CardGameModel,
-    private val onCardClick: (Int)->Unit
-):BaseAdapter() {
+    private val model: CardMatchingGame,
+    private val onCardClick: (Int) -> Unit
+) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
 
-    override fun getCount(): Int = model.getCardCount()
-
-    override fun getItem(position: Int): Any = position
-
-    override fun getItemId(position: Int): Long = position.toLong()
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val btn: Button
-        if(convertView == null){
-            btn = View.inflate(context,R.layout.item_card,null) as Button
-        }else{
-            btn = convertView as Button
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_card, parent, false)
+        val holder = CardViewHolder(view)
+        holder.tvCard.setOnClickListener {
+            val position = holder.bindingAdapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                onCardClick(position)
+            }
         }
+        return holder
+    }
 
-        // 牌的高度取列宽，让每张牌成为正方形并铺满网格
-        if (parent is GridView && parent.width > 0) {
-            val columns = parent.numColumns
-            val spacing = parent.horizontalSpacing * (columns - 1)
-            val available = parent.width - parent.paddingLeft - parent.paddingRight - spacing
-            val cellSize = available / columns
-            if (cellSize > 0 && btn.layoutParams?.height != cellSize) {
-                btn.layoutParams = AbsListView.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    cellSize
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+        val context = holder.itemView.context
+        val card = model.getCard(position)
+
+        when {
+            card.isMatched -> {
+                holder.tvCard.text = card.value.toString()
+                holder.tvCard.setTextColor(
+                    ContextCompat.getColor(context, R.color.card_text_matched)
                 )
+                holder.tvCard.setBackgroundResource(R.drawable.bg_card_matched)
+            }
+
+            card.isChosen -> {
+                holder.tvCard.text = card.value.toString()
+                holder.tvCard.setTextColor(
+                    ContextCompat.getColor(context, R.color.card_text_face)
+                )
+                holder.tvCard.setBackgroundResource(R.drawable.bg_card_front)
+            }
+
+            else -> {
+                holder.tvCard.text = context.getString(R.string.card_back)
+                holder.tvCard.setTextColor(ContextCompat.getColor(context, R.color.white))
+                holder.tvCard.setBackgroundResource(R.drawable.bg_card_back)
             }
         }
 
-        if(model.isCardOpen(position)){
-            btn.text = model.getCardValue(position).toString()
-        }else{
-            btn.text = "?"
-        }
+        holder.tvCard.isEnabled = !card.isMatched
+    }
 
-        btn.setOnClickListener {
-            onCardClick.invoke(position)
-        }
-        return btn
+    override fun getItemCount(): Int = model.cardCount
+
+    class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tvCard: TextView = itemView.findViewById(R.id.tv_card)
     }
 }

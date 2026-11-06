@@ -8,9 +8,29 @@
     <string name="start_game">翻牌游戏</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
-    <string name="score">得分</string>
+    <string name="score_format">得分：%1$d</string>
     <string name="reset_game">重置游戏</string>
     <string name="exit">退出</string>
     <string name="male">男</string>
     <string name="female">女</string>
+    <string name="info_format">%1$s：%2$s</string>
+
+    <!-- 个人信息页 -->
+    <string name="hobby">爱好</string>
+    <string name="hobby_read">阅读</string>
+    <string name="hobby_travel">旅游</string>
+    <string name="hobby_game">游戏</string>
+    <string name="hobby_shop">购物</string>
+
+    <!-- 实验五新增：菜单、关于对话框 -->
+    <string name="menu_about">关于</string>
+    <string name="about_title">关于本应用</string>
+    <string name="about_msg">RecyclerView翻牌游戏\n苏锦浩_2024110737\nAndroid实验五</string>
+    <string name="ok">确定</string>
+
+    <!-- 实验五新增：翻牌游戏 -->
+    <string name="card_back">?</string>
+    <string name="game_win_title">恭喜通关</string>
+    <string name="game_win_msg">所有牌都匹配成功！\n最终得分：%1$d</string>
+    <string name="play_again">再来一局</string>
 </resources>

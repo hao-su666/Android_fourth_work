@@ -18,13 +18,6 @@ class PersonInformationActivity : AppCompatActivity() {
     private lateinit var cbShop: CheckBox
     private lateinit var player: Player
 
-    companion object {
-        private const val HOBBY_READ = "阅读"
-        private const val HOBBY_TRAVEL = "旅游"
-        private const val HOBBY_GAME = "游戏"
-        private const val HOBBY_SHOP = "购物"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_person_information)
@@ -39,7 +32,7 @@ class PersonInformationActivity : AppCompatActivity() {
         val btnSave: Button = findViewById(R.id.btn_save)
         val btnCancel: Button = findViewById(R.id.btn_cancel)
 
-        player = intent.getSerializableExtra("player") as Player
+        player = intent.getSerializableExtra("player") as? Player ?: Player()
 
         etName.setText(player.name)
         etPhone.setText(player.phone)
@@ -49,26 +42,26 @@ class PersonInformationActivity : AppCompatActivity() {
             getString(R.string.male) -> rgGender.check(R.id.rb_male)
             getString(R.string.female) -> rgGender.check(R.id.rb_female)
         }
-        cbRead.isChecked = player.hobby.contains(HOBBY_READ)
-        cbTravel.isChecked = player.hobby.contains(HOBBY_TRAVEL)
-        cbGame.isChecked = player.hobby.contains(HOBBY_GAME)
-        cbShop.isChecked = player.hobby.contains(HOBBY_SHOP)
+        cbRead.isChecked = player.hobby.contains(getString(R.string.hobby_read))
+        cbTravel.isChecked = player.hobby.contains(getString(R.string.hobby_travel))
+        cbGame.isChecked = player.hobby.contains(getString(R.string.hobby_game))
+        cbShop.isChecked = player.hobby.contains(getString(R.string.hobby_shop))
 
         btnSave.setOnClickListener {
             player.name = etName.text.toString()
             player.phone = etPhone.text.toString()
 
-            player.gender = when(rgGender.checkedRadioButtonId){
+            player.gender = when (rgGender.checkedRadioButtonId) {
                 R.id.rb_male -> getString(R.string.male)
                 R.id.rb_female -> getString(R.string.female)
                 else -> ""
             }
 
             val hobbies = mutableListOf<String>()
-            if (cbRead.isChecked) hobbies.add(HOBBY_READ)
-            if (cbTravel.isChecked) hobbies.add(HOBBY_TRAVEL)
-            if (cbGame.isChecked) hobbies.add(HOBBY_GAME)
-            if (cbShop.isChecked) hobbies.add(HOBBY_SHOP)
+            if (cbRead.isChecked) hobbies.add(getString(R.string.hobby_read))
+            if (cbTravel.isChecked) hobbies.add(getString(R.string.hobby_travel))
+            if (cbGame.isChecked) hobbies.add(getString(R.string.hobby_game))
+            if (cbShop.isChecked) hobbies.add(getString(R.string.hobby_shop))
             player.hobby = hobbies.joinToString(" ")
 
             val intent = Intent()
