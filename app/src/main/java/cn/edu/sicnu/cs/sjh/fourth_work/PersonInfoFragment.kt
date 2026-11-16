@@ -113,8 +113,13 @@ class PersonInfoFragment : Fragment(R.layout.fragment_person_info) {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        // 从游戏页切换回个人信息页时刷新最高分
-        if (!hidden) refreshGameRecords()
+        if (hidden) {
+            // 切换到游戏页时保存个人信息
+            if (this::etName.isInitialized) collectAndSave()
+        } else {
+            // 从游戏页切换回个人信息页时刷新最高分
+            refreshGameRecords()
+        }
     }
 
     override fun onPause() {

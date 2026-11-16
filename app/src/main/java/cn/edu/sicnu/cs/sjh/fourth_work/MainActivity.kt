@@ -41,8 +41,17 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) = Unit
         })
 
-        // 首次启动或配置变更后，显示当前选中的标签对应的 Fragment
+        // 首次启动时显示第一个标签对应的 Fragment
         showFragment(tabLayout.selectedTabPosition.coerceAtLeast(0))
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // 旋转屏幕等配置变更后，TabLayout 会在状态恢复阶段重新选中标签，
+        // 这里再同步一次 Fragment 的显示/隐藏状态
+        if (savedInstanceState != null) {
+            showFragment(tabLayout.selectedTabPosition.coerceAtLeast(0))
+        }
     }
 
     private fun showFragment(position: Int) {
