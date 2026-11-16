@@ -4,33 +4,41 @@
     <string name="gender">性别</string>
     <string name="phone">电话</string>
     <string name="max_score">游戏最高分</string>
-    <string name="edit_info">修改个人信息</string>
-    <string name="start_game">翻牌游戏</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
     <string name="score_format">得分：%1$d</string>
     <string name="reset_game">重置游戏</string>
-    <string name="exit">退出</string>
     <string name="male">男</string>
     <string name="female">女</string>
-    <string name="info_format">%1$s：%2$s</string>
 
-    <!-- 个人信息页 -->
+    <!-- 个人信息 Fragment -->
     <string name="hobby">爱好</string>
     <string name="hobby_read">阅读</string>
     <string name="hobby_travel">旅游</string>
     <string name="hobby_game">游戏</string>
     <string name="hobby_shop">购物</string>
+    <string name="save_success">个人信息已保存</string>
+    <string name="save_failed">保存失败</string>
+    <string name="cancel_restored">已恢复上次保存的信息</string>
+    <string name="game_records_format">两张牌最高分：%1$d　三张牌最高分：%2$d</string>
+    <string name="serialization_tip">个人信息、游戏牌局和历史成绩均通过对象序列化保存在应用私有文件中，退出程序后重新打开即可恢复。</string>
 
-    <!-- 实验五新增：菜单、关于对话框 -->
+    <!-- Fragment 标签 -->
+    <string name="tab_person">个人信息</string>
+    <string name="tab_two_card">两张牌</string>
+    <string name="tab_three_card">三张牌</string>
+
+    <!-- 菜单、关于对话框 -->
     <string name="menu_about">关于</string>
     <string name="about_title">关于本应用</string>
-    <string name="about_msg">RecyclerView翻牌游戏\n苏锦浩_2024110737\nAndroid实验五</string>
+    <string name="about_msg">Fragment 翻牌游戏\n苏锦浩_2024110737\nAndroid实验六：使用 Fragment 重构 APP</string>
     <string name="ok">确定</string>
 
-    <!-- 实验五新增：翻牌游戏 -->
+    <!-- 翻牌游戏 -->
     <string name="card_back">?</string>
     <string name="game_win_title">恭喜通关</string>
     <string name="game_win_msg">所有牌都匹配成功！\n最终得分：%1$d</string>
     <string name="play_again">再来一局</string>
+    <string name="no_history">暂无</string>
+    <string name="game_history_format">最高分：%1$d　通关：%2$d 次\n历史成绩：%3$s</string>
 </resources>

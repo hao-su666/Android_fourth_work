@@ -1,12 +1,21 @@
 package cn.edu.sicnu.cs.sjh.fourth_work
 
+import java.io.Serializable
+
 /**
  * 翻牌游戏模型（Model）。
  *
- * 实验五要求实现三张牌玩法：牌面值相同的三张牌可以被消除。
- * 修改游戏规则时，只需要调整 [chooseCardAtIndex] 与 [Card.match]。
+ * 通过 [cardsPerMatch] 同时支持实验六要求的两种玩法：
+ * - 两张牌玩法：两张牌面值相同即可消除；
+ * - 三张牌玩法：三张牌面值相同才能消除。
+ *
+ * 模型实现 Serializable，配合 [GameSave] 把整个牌局写入文件，
+ * 退出程序后再打开可以恢复上次的牌面与分数。
  */
-class CardMatchingGame(val cardCount: Int) {
+class CardMatchingGame(
+    val cardCount: Int,
+    val cardsPerMatch: Int
+) : Serializable {
 
     private val cards = mutableListOf<Card>()
     private val chosenIndices = mutableListOf<Int>()
@@ -14,25 +23,23 @@ class CardMatchingGame(val cardCount: Int) {
     var score = 0
         private set
 
-    /** 三张牌不匹配时锁定棋盘，等待控制器延时把牌盖回去。 */
+    /** 凑满一组牌但不匹配时锁定棋盘，等待控制器延时把牌盖回去。 */
     var isLocked = false
         private set
 
     init {
-        require(cardCount > 0 && cardCount % CARDS_PER_MATCH == 0) {
-            "cardCount must be a positive multiple of $CARDS_PER_MATCH"
+        require(cardCount > 0 && cardsPerMatch >= 2 && cardCount % cardsPerMatch == 0) {
+            "cardCount must be a positive multiple of cardsPerMatch"
         }
         reset()
     }
 
-    /**
-     * 重新洗牌并重置分数、选中状态。实验五要求新增的 reset 方法。
-     */
+    /** 重新洗牌并重置分数、选中状态。 */
     fun reset() {
         cards.clear()
-        val groupCount = cardCount / CARDS_PER_MATCH
+        val groupCount = cardCount / cardsPerMatch
         for (value in 1..groupCount) {
-            repeat(CARDS_PER_MATCH) { cards.add(Card(value)) }
+            repeat(cardsPerMatch) { cards.add(Card(value)) }
         }
         cards.shuffle()
 
@@ -44,7 +51,7 @@ class CardMatchingGame(val cardCount: Int) {
     /**
      * 选中指定位置的牌。
      *
-     * @return true 表示本次选择凑满了三张并完成了一次匹配判定；
+     * @return true 表示本次选择凑满了一组并完成了一次匹配判定；
      *         false 表示只是翻开/取消了一张牌。
      */
     fun chooseCardAtIndex(index: Int): Boolean {
@@ -63,7 +70,7 @@ class CardMatchingGame(val cardCount: Int) {
         card.isChosen = true
         chosenIndices.add(index)
 
-        if (chosenIndices.size < CARDS_PER_MATCH) return false
+        if (chosenIndices.size < cardsPerMatch) return false
 
         val firstCard = cards[chosenIndices.first()]
         val otherCards = chosenIndices.drop(1).map { cards[it] }
@@ -84,7 +91,7 @@ class CardMatchingGame(val cardCount: Int) {
     }
 
     /**
-     * 三张牌不匹配后，由控制器延时调用，把选中的牌重新盖回去。
+     * 一组牌不匹配后，由控制器延时调用，把选中的牌重新盖回去。
      */
     fun revealChosenCards() {
         chosenIndices.forEach { cards[it].isChosen = false }
@@ -103,9 +110,8 @@ class CardMatchingGame(val cardCount: Int) {
     fun isCardMatched(index: Int): Boolean = cards[index].isMatched
 
     companion object {
-        /** 一次匹配需要的牌数。 */
-        const val CARDS_PER_MATCH = 3
-        const val MATCH_BONUS = 30
+        const val MATCH_BONUS = 20
         const val MISMATCH_PENALTY = 10
+        private const val serialVersionUID = 1L
     }
 }

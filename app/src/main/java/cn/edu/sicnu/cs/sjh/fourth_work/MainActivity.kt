@@ -1,50 +1,71 @@
 package cn.edu.sicnu.cs.sjh.fourth_work
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 
+/**
+ * 实验六：使用 Fragment 重构 APP。
+ *
+ * 三个 Fragment 通过 TabLayout 切换：
+ * 1. [PersonInfoFragment]  个人信息
+ * 2. [TwoCardGameFragment] 两张牌翻牌游戏
+ * 3. [ThreeCardGameFragment] 三张牌翻牌游戏
+ *
+ * 使用 add + show/hide 而不是 replace，切换标签时保留各 Fragment 的界面状态。
+ */
 class MainActivity : AppCompatActivity() {
-    private lateinit var tvName: TextView
-    private lateinit var tvGender: TextView
-    private lateinit var tvPhone: TextView
-    private lateinit var tvMaxScore: TextView
-    private var player: Player = Player()
 
-    companion object {
-        const val REQ_EDIT = 1001
-        const val REQ_GAME = 1002
-    }
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvName = findViewById(R.id.tv_name)
-        tvGender = findViewById(R.id.tv_gender)
-        tvPhone = findViewById(R.id.tv_phone)
-        tvMaxScore = findViewById(R.id.tv_max_score)
-        val btnEdit: Button = findViewById(R.id.btn_edit)
-        val btnGame: Button = findViewById(R.id.btn_game)
+        tabLayout = findViewById(R.id.tab_layout)
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_person))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_two_card))
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_three_card))
 
-        refreshUI()
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                showFragment(tab.position)
+            }
 
-        btnEdit.setOnClickListener {
-            val intent = Intent(this, PersonInformationActivity::class.java)
-            intent.putExtra("player", player)
-            startActivityForResult(intent, REQ_EDIT)
+            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
+
+            override fun onTabReselected(tab: TabLayout.Tab) = Unit
+        })
+
+        // 首次启动或配置变更后，显示当前选中的标签对应的 Fragment
+        showFragment(tabLayout.selectedTabPosition.coerceAtLeast(0))
+    }
+
+    private fun showFragment(position: Int) {
+        val tag = TAGS[position]
+        val fm = supportFragmentManager
+        val transaction = fm.beginTransaction()
+
+        for (t in TAGS) {
+            val fragment = fm.findFragmentByTag(t) ?: continue
+            if (t == tag) transaction.show(fragment) else transaction.hide(fragment)
         }
 
-        btnGame.setOnClickListener {
-            val intent = Intent(this, CardGameActivity::class.java)
-            intent.putExtra("player", player)
-            startActivityForResult(intent, REQ_GAME)
+        // 该标签对应的 Fragment 还没创建时才 add；已存在则由上面的 show 恢复
+        if (fm.findFragmentByTag(tag) == null) {
+            transaction.add(R.id.fragment_container, createFragment(position), tag)
         }
+        transaction.commit()
+    }
+
+    private fun createFragment(position: Int): Fragment = when (position) {
+        0 -> PersonInfoFragment()
+        1 -> TwoCardGameFragment()
+        else -> ThreeCardGameFragment()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -68,25 +89,7 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun refreshUI() {
-        tvName.text = getString(R.string.info_format, getString(R.string.name), player.name)
-        tvGender.text = getString(R.string.info_format, getString(R.string.gender), player.gender)
-        tvPhone.text = getString(R.string.info_format, getString(R.string.phone), player.phone)
-        tvMaxScore.text = getString(
-            R.string.info_format,
-            getString(R.string.max_score),
-            player.maxScore.toString()
-        )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && data != null) {
-            val retPlayer = data.getSerializableExtra("player") as Player?
-            retPlayer?.let {
-                player = it
-                refreshUI()
-            }
-        }
+    companion object {
+        private val TAGS = arrayOf("person_info", "two_card_game", "three_card_game")
     }
 }

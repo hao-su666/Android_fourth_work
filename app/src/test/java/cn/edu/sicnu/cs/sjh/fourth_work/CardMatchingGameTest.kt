@@ -9,7 +9,7 @@ class CardMatchingGameTest {
 
     @Test
     fun resetClearsScoreAndChosenState() {
-        val model = CardMatchingGame(3)
+        val model = CardMatchingGame(3, 3)
         model.chooseCardAtIndex(0)
         assertTrue(model.isCardChosen(0))
 
@@ -22,7 +22,7 @@ class CardMatchingGameTest {
 
     @Test
     fun matchingThreeSameValueCardsScores() {
-        val model = CardMatchingGame(3)
+        val model = CardMatchingGame(3, 3)
 
         assertFalse(model.chooseCardAtIndex(0))
         assertFalse(model.chooseCardAtIndex(1))
@@ -36,8 +36,22 @@ class CardMatchingGameTest {
     }
 
     @Test
+    fun matchingTwoSameValueCardsScores() {
+        val model = CardMatchingGame(4, 2)
+        val pair = (0 until 4).groupBy { model.getCardValue(it) }.values.first()
+
+        assertFalse(model.chooseCardAtIndex(pair[0]))
+        assertTrue(model.chooseCardAtIndex(pair[1]))
+
+        assertEquals(CardMatchingGame.MATCH_BONUS, model.score)
+        assertTrue(model.isCardMatched(pair[0]))
+        assertTrue(model.isCardMatched(pair[1]))
+        assertFalse(model.isGameOver())
+    }
+
+    @Test
     fun mismatchedThreeCardsLockThenReveal() {
-        val model = CardMatchingGame(6)
+        val model = CardMatchingGame(6, 3)
         val groups = (0 until 6).groupBy { model.getCardValue(it) }
         val firstGroup = groups.values.first()
         val secondGroup = groups.values.first { it.first() != firstGroup.first() }
